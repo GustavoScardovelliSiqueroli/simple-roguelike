@@ -1,5 +1,4 @@
 local collisions = {}
-local hud_width = 28
 
 function collisions.satayInBounds(x, y, width, height)
 	local w_width, w_height = love.graphics.getDimensions()
@@ -10,8 +9,8 @@ function collisions.satayInBounds(x, y, width, height)
 		x = w_width - width
 	end
 
-	if y < hud_width then
-		y = hud_width
+	if y < 0 then
+		y = 0
 	end
 	if y + height > w_height then
 		y = w_height - height
