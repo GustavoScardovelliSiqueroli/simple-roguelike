@@ -1,4 +1,4 @@
-local collision = require("collision")
+local Collision = require("collision")
 
 local Player = {}
 Player.__index = Player
@@ -44,7 +44,7 @@ function Player:update(dt)
 	self.x = self.x + ix * self.speed * dt
 	self.y = self.y + iy * self.speed * dt
 
-	self.x, self.y = collision.satayInBounds(self.x, self.y, self.size, self.size)
+	self.x, self.y = Collision.satayInBounds(self.x, self.y, self.size, self.size)
 end
 
 function Player:draw()

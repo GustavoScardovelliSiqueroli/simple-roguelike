@@ -1,6 +1,6 @@
-local collisions = {}
+local Collision = {}
 
-function collisions.satayInBounds(x, y, width, height)
+function Collision.satayInBounds(x, y, width, height)
 	local w_width, w_height = love.graphics.getDimensions()
 	if x < 0 then
 		x = 0
@@ -19,4 +19,4 @@ function collisions.satayInBounds(x, y, width, height)
 	return x, y
 end
 
-return collisions
+return Collision
