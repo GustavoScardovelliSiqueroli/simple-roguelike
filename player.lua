@@ -51,4 +51,11 @@ function Player:draw()
 	love.graphics.rectangle("fill", self.x, self.y, self.size, self.size)
 end
 
+function Player:takeDamage(damage)
+	self.health = self.health - damage
+	if self.health < 0 then
+		self.health = 0
+	end
+end
+
 return Player
