@@ -1,3 +1,5 @@
+local collision = require("collision")
+
 local Player = {}
 Player.__index = Player
 
@@ -23,11 +25,15 @@ local function get_movement_vector()
 	return x / magnitude, y / magnitude
 end
 
-function Player:new(x, y)
+function Player:new(x, y, size)
 	self = setmetatable({}, Player)
+
+	self.health = 100
+	self.maxHealth = 100
 
 	self.x = x
 	self.y = y
+	self.size = size
 	self.speed = 200
 
 	return self
@@ -37,10 +43,12 @@ function Player:update(dt)
 	local ix, iy = get_movement_vector()
 	self.x = self.x + ix * self.speed * dt
 	self.y = self.y + iy * self.speed * dt
+
+	self.x, self.y = collision.satayInBounds(self.x, self.y, self.size, self.size)
 end
 
 function Player:draw()
-	love.graphics.rectangle("fill", self.x, self.y, 20, 20)
+	love.graphics.rectangle("fill", self.x, self.y, self.size, self.size)
 end
 
 return Player
