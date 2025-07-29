@@ -1,5 +1,5 @@
 local Player = require("player")
-local basic_map = require("maps.basic_map_64x48")
+local ScreenShake = require("screen_shake")
 
 local player
 local map
@@ -19,10 +19,13 @@ end
 function love.update(dt)
 	player:update(dt)
 	health_text = string.format("%03d/%03d", player.health, player.maxHealth)
+	ScreenShake.update(dt)
 end
 
 function love.draw()
+	ScreenShake.preDraw()
 	player:draw()
+	ScreenShake.postDraw()
 
 	love.graphics.setFont(text_font)
 	love.graphics.setColor(1, 1, 1)

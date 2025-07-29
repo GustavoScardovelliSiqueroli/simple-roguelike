@@ -1,4 +1,5 @@
 local Collision = require("collision")
+local ScreenShake = require("screen_shake")
 
 local Player = {}
 Player.__index = Player
@@ -52,6 +53,7 @@ function Player:draw()
 end
 
 function Player:takeDamage(damage)
+	ScreenShake.trigger(0.5, 7)
 	self.health = self.health - damage
 	if self.health < 0 then
 		self.health = 0
