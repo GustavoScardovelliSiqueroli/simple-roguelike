@@ -53,7 +53,7 @@ function Player:draw()
 end
 
 function Player:takeDamage(damage)
-	ScreenShake.trigger(0.5, 7)
+	ScreenShake.trigger(0.3, 7)
 	self.health = self.health - damage
 	if self.health < 0 then
 		self.health = 0

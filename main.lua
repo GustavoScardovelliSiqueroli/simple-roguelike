@@ -1,8 +1,9 @@
 local Player = require("player")
 local ScreenShake = require("screen_shake")
+local Enemy = require("enemy")
 
+local enemy
 local player
-local map
 local w_width, w_height = love.graphics.getDimensions()
 local emoji_font
 local text_font
@@ -13,6 +14,7 @@ function love.load()
 	emoji_font = love.graphics.newFont("statics/fonts/NotoEmoji-VariableFont_wght.ttf", 20)
 	text_font = love.graphics.newFont("statics/fonts/PublicPixel-rv0pA.ttf", 12)
 
+	enemy = Enemy:new(0, 0, 100)
 	player = Player:new((w_width - player_size) / 2, (w_height - player_size) / 2, player_size)
 end
 
