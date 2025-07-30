@@ -36,11 +36,17 @@ function Player:new(x, y, size)
 	self.y = y
 	self.size = size
 	self.speed = 200
+	self.taking_damage_time = 0
+	self.taking_damage_duration = 0.3
 
 	return self
 end
 
 function Player:update(dt)
+	if self.taking_damage_time > 0 then
+		self.taking_damage_time = self.taking_damage_time - dt
+	end
+
 	local ix, iy = get_movement_vector()
 	self.x = self.x + ix * self.speed * dt
 	self.y = self.y + iy * self.speed * dt
@@ -50,10 +56,15 @@ end
 
 function Player:draw()
 	love.graphics.rectangle("fill", self.x, self.y, self.size, self.size)
+	if self.taking_damage_time > 0 then
+		love.graphics.setColor(255, 0, 0, 0.6)
+		love.graphics.rectangle("fill", self.x, self.y, self.size, self.size)
+	end
 end
 
 function Player:takeDamage(damage)
-	ScreenShake.trigger(0.3, 7)
+	ScreenShake.trigger(0.3, 2)
+	self.taking_damage_time = self.taking_damage_duration
 	self.health = self.health - damage
 	if self.health < 0 then
 		self.health = 0
