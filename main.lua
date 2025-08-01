@@ -22,7 +22,7 @@ end
 
 function love.update(dt)
 	player:update(dt)
-	enemy:update(dt)
+	enemy:update(dt, player)
 	health_text = string.format("%03d/%03d", player.health, player.maxHealth)
 	ScreenShake.update(dt)
 end
