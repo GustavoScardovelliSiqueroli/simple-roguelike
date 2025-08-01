@@ -1,5 +1,5 @@
 local Player = require("player")
-local ScreenShake = require("screen_shake")
+local ScreenShake = require("effects.screen_shake")
 local Enemy = require("enemy")
 
 local enemy
@@ -31,8 +31,8 @@ function love.draw()
 	enemy_2:draw()
 	enemy:draw()
 
-	ScreenShake.preDraw()
 	player:draw()
+	ScreenShake.preDraw()
 	love.graphics.setFont(text_font)
 	love.graphics.setColor(1, 1, 1)
 	love.graphics.printf(health_text, 40, 5, 90, "right")
