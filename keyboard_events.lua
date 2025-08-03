@@ -22,4 +22,25 @@ function KeyBoardEvents.get_movement_vector()
 	return x / magnitude, y / magnitude
 end
 
+function KeyBoardEvents.get_direction_vector()
+	local x, y = 0, 0
+	if love.keypressed("up") then
+		y = -1
+	end
+	if love.keypressed("down") then
+		y = 1
+	end
+	if love.keypressed("right") then
+		x = 1
+	end
+	if love.keypressed("left") then
+		x = -1
+	end
+	local magnitude = math.sqrt(x * x + y * y)
+	if magnitude == 0 then
+		return 0, 0
+	end
+	return x / magnitude, y / magnitude
+end
+
 return KeyBoardEvents
