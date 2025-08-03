@@ -1,6 +1,7 @@
 local Player = require("player")
 local ScreenShake = require("effects.screen_shake")
 local Enemy = require("enemy")
+local Collision = require("collision")
 
 local enemy
 local enemy_2
@@ -15,14 +16,28 @@ function love.load()
 	emoji_font = love.graphics.newFont("statics/fonts/NotoEmoji-VariableFont_wght.ttf", 20)
 	text_font = love.graphics.newFont("statics/fonts/PublicPixel-rv0pA.ttf", 12)
 
-	enemy = Enemy:new(100, 100, 100, 50)
-	enemy_2 = Enemy:new(120, 500, 100, 50)
+	enemy = Enemy:new(100, 100, 100, 50, 10)
+	enemy_2 = Enemy:new(120, 500, 100, 50, 20)
 	player = Player:new((w_width - player_size) / 2, (w_height - player_size) / 2, player_size)
 end
 
 function love.update(dt)
 	player:update(dt)
 	enemy:update(dt, player)
+	if
+		Collision.checkCollision(
+			player.x,
+			player.y,
+			player_size / 2,
+			player_size / 2,
+			enemy.x,
+			enemy.y,
+			enemy.size / 2,
+			enemy.size / 2
+		)
+	then
+		player:takeDamage(enemy.damage)
+	end
 	health_text = string.format("%03d/%03d", player.health, player.maxHealth)
 	ScreenShake.update(dt)
 end
@@ -32,6 +47,8 @@ function love.draw()
 	enemy:draw()
 
 	player:draw()
+
+	love.graphics.push()
 	ScreenShake.preDraw()
 	love.graphics.setFont(text_font)
 	love.graphics.setColor(1, 1, 1)
@@ -40,6 +57,7 @@ function love.draw()
 	love.graphics.print("❤", 10, 2)
 	love.graphics.setFont(text_font)
 	ScreenShake.postDraw()
+	love.graphics.pop()
 
 	love.graphics.printf("fps: " .. string.format("%02d", love.timer.getFPS()), w_width - 100, 5, 90, "right")
 end

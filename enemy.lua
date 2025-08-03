@@ -1,13 +1,14 @@
 local Enemy = {}
 Enemy.__index = Enemy
 
-function Enemy:new(x, y, speed, size)
+function Enemy:new(x, y, speed, size, damage)
 	self = setmetatable({}, Enemy)
 
 	self.x = x
 	self.y = y
 	self.size = size
 	self.speed = speed
+	self.damage = damage
 
 	return self
 end
