@@ -25,16 +25,7 @@ function love.update(dt)
 	player:update(dt)
 	enemy:update(dt, player)
 	if
-		Collision.checkCollision(
-			player.x,
-			player.y,
-			player_size / 2,
-			player_size / 2,
-			enemy.x,
-			enemy.y,
-			enemy.size / 2,
-			enemy.size / 2
-		)
+		Collision.checkCollision(player.x, player.y, player_size, player_size, enemy.x, enemy.y, enemy.size, enemy.size)
 	then
 		player:takeDamage(enemy.damage)
 	end
@@ -66,7 +57,7 @@ function love.keypressed(key)
 	if key == "q" then
 		love.event.quit()
 	end
-	if key == "e" then
-		player:takeDamage(10)
-	end
+	-- if key == "e" then
+	-- 	player:takeDamage(10)
+	-- end
 end

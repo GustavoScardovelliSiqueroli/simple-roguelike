@@ -1,31 +1,10 @@
 local Collision = require("collision")
 local ScreenShake = require("effects.screen_shake")
 local SizeEffect = require("effects.size_effect")
+local KeyBoardEvents = require("keyboard_events")
 
 local Player = {}
 Player.__index = Player
-
-local function get_movement_vector()
-	local x = 0
-	local y = 0
-	if love.keyboard.isDown("a") then
-		x = -1
-	end
-	if love.keyboard.isDown("d") then
-		x = 1
-	end
-	if love.keyboard.isDown("w") then
-		y = -1
-	end
-	if love.keyboard.isDown("s") then
-		y = 1
-	end
-	local magnitude = math.sqrt(x * x + y * y)
-	if magnitude == 0 then
-		return 0, 0
-	end
-	return x / magnitude, y / magnitude
-end
 
 function Player:new(x, y, size)
 	self = setmetatable({}, Player)
@@ -39,6 +18,7 @@ function Player:new(x, y, size)
 	self.speed = 200
 	self.taking_damage_time = 0
 	self.taking_damage_duration = 0.3
+	self.ivulnerable_time = 0
 
 	self.size_effect = SizeEffect:new(self)
 	return self
@@ -51,7 +31,11 @@ function Player:update(dt)
 		self.taking_damage_time = self.taking_damage_time - dt
 	end
 
-	local ix, iy = get_movement_vector()
+	if self.ivulnerable_time > 0 then
+		self.ivulnerable_time = self.ivulnerable_time - dt
+	end
+
+	local ix, iy = KeyBoardEvents.get_movement_vector()
 	self.x = self.x + ix * self.speed * dt
 	self.y = self.y + iy * self.speed * dt
 
@@ -73,6 +57,10 @@ function Player:draw()
 end
 
 function Player:takeDamage(damage)
+	if self.ivulnerable_time > 0 then
+		return
+	end
+	self.ivulnerable_time = 0.5
 	ScreenShake.trigger(0.3, 2)
 	self.size_effect:trigger(0.3, 0.8)
 

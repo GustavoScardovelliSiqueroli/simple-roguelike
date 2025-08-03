@@ -9,6 +9,7 @@ function Enemy:new(x, y, speed, size, damage)
 	self.size = size
 	self.speed = speed
 	self.damage = damage
+	self.health = 50
 
 	return self
 end
@@ -32,6 +33,13 @@ end
 
 function Enemy:draw()
 	love.graphics.rectangle("fill", self.x, self.y, self.size, self.size)
+end
+
+function Enemy:takeDamage(damage)
+	self.health = self.health - damage
+	if self.health < 0 then
+		self.health = 0
+	end
 end
 
 return Enemy
