@@ -2,6 +2,7 @@ local Collision = require("collision")
 local ScreenShake = require("effects.screen_shake")
 local SizeEffect = require("effects.size_effect")
 local KeyBoardEvents = require("keyboard_events")
+local Bullet = require("bullet")
 
 local Player = {}
 Player.__index = Player
@@ -11,6 +12,8 @@ function Player:new(x, y, size)
 
 	self.health = 100
 	self.maxHealth = 100
+
+	self.bullets = {}
 
 	self.x = x
 	self.y = y
@@ -35,11 +38,16 @@ function Player:update(dt)
 		self.ivulnerable_time = self.ivulnerable_time - dt
 	end
 
-	local ix, iy = KeyBoardEvents.get_movement_vector()
-	self.x = self.x + ix * self.speed * dt
-	self.y = self.y + iy * self.speed * dt
+	local dx, dy = KeyBoardEvents.get_movement_vector()
+	self.x = self.x + dx * self.speed * dt
+	self.y = self.y + dy * self.speed * dt
 
 	self.x, self.y = Collision.satayInBounds(self.x, self.y, self.size, self.size)
+
+	for i = #self.bullets, 1, -1 do
+		local bullet = self.bullets[i]
+		bullet:update(dt)
+	end
 end
 
 function Player:draw()
