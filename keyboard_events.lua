@@ -24,16 +24,16 @@ end
 
 function KeyBoardEvents.get_direction_vector()
 	local x, y = 0, 0
-	if love.keypressed("up") then
+	if love.keyboard.isDown("up") then
 		y = -1
 	end
-	if love.keypressed("down") then
+	if love.keyboard.isDown("down") then
 		y = 1
 	end
-	if love.keypressed("right") then
+	if love.keyboard.isDown("right") then
 		x = 1
 	end
-	if love.keypressed("left") then
+	if love.keyboard.isDown("left") then
 		x = -1
 	end
 	local magnitude = math.sqrt(x * x + y * y)

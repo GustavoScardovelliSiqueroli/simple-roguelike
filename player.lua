@@ -14,6 +14,7 @@ function Player:new(x, y, size)
 	self.maxHealth = 100
 
 	self.bullets = {}
+	self.bullet_time = 0
 
 	self.x = x
 	self.y = y
@@ -38,11 +39,20 @@ function Player:update(dt)
 		self.ivulnerable_time = self.ivulnerable_time - dt
 	end
 
+	if self.bullet_time > 0 then
+		self.bullet_time = self.bullet_time - dt
+	end
+
 	local dx, dy = KeyBoardEvents.get_movement_vector()
 	self.x = self.x + dx * self.speed * dt
 	self.y = self.y + dy * self.speed * dt
 
 	self.x, self.y = Collision.satayInBounds(self.x, self.y, self.size, self.size)
+
+	local bullet_x, bullet_y = KeyBoardEvents.get_direction_vector()
+	if bullet_x ~= 0 or bullet_y ~= 0 then
+		self:shoot()
+	end
 
 	for i = #self.bullets, 1, -1 do
 		local bullet = self.bullets[i]
@@ -62,6 +72,11 @@ function Player:draw()
 
 	self.size_effect:postDraw()
 	ScreenShake.postDraw()
+
+	for i = #self.bullets, 1, -1 do
+		local bullet = self.bullets[i]
+		bullet:draw()
+	end
 end
 
 function Player:takeDamage(damage)
@@ -77,6 +92,14 @@ function Player:takeDamage(damage)
 	if self.health < 0 then
 		self.health = 0
 	end
+end
+
+function Player:shoot()
+	if self.bullet_time > 0 then
+		return
+	end
+	self.bullet_time = 1
+	print("shoot")
 end
 
 return Player
