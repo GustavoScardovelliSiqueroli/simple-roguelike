@@ -15,6 +15,8 @@ function Player:new(x, y, size)
 
 	self.bullets = {}
 	self.bullet_time = 0
+	self.atack_speed = 0.5
+	self.atack_speed_base = 1
 
 	self.x = x
 	self.y = y
@@ -98,8 +100,13 @@ function Player:shoot()
 	if self.bullet_time > 0 then
 		return
 	end
-	self.bullet_time = 1
 	print("shoot")
+	-- ATACK SPEED BASE (QUANTOS TIROS POR SEGUNDO)
+	-- devo entao diminuir dele uma certa quantida de tiros por segundo
+	-- ou multiplicar por uma porcentagem
+	-- ATACK SPEED NORMAL E PORCENTAGEM A SER INCREMENTADO
+	local bullet_p_second = self.atack_speed_base * (self.atack_speed + 1)
+	self.bullet_time = 1 / bullet_p_second
 end
 
 return Player
