@@ -32,18 +32,7 @@ end
 
 function Player:update(dt)
 	self.size_effect:update(dt)
-
-	if self.taking_damage_time > 0 then
-		self.taking_damage_time = self.taking_damage_time - dt
-	end
-
-	if self.ivulnerable_time > 0 then
-		self.ivulnerable_time = self.ivulnerable_time - dt
-	end
-
-	if self.bullet_time > 0 then
-		self.bullet_time = self.bullet_time - dt
-	end
+	self:manage_timers(dt)
 
 	local dx, dy = KeyBoardEvents.get_movement_vector()
 	self.x = self.x + dx * self.speed * dt
@@ -107,6 +96,20 @@ function Player:shoot()
 	-- ATACK SPEED NORMAL E PORCENTAGEM A SER INCREMENTADO
 	local bullet_p_second = self.atack_speed_base * (self.atack_speed + 1)
 	self.bullet_time = 1 / bullet_p_second
+end
+
+function Player:manage_timers(dt)
+	if self.taking_damage_time > 0 then
+		self.taking_damage_time = self.taking_damage_time - dt
+	end
+
+	if self.ivulnerable_time > 0 then
+		self.ivulnerable_time = self.ivulnerable_time - dt
+	end
+
+	if self.bullet_time > 0 then
+		self.bullet_time = self.bullet_time - dt
+	end
 end
 
 return Player
