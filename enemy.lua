@@ -11,16 +11,21 @@ function Enemy:new(x, y, speed, size, damage)
 	self.damage = damage
 	self.health = 50
 
+	self.take_damage_duration = 0.2
+	self.take_damage_time = 0
+
 	return self
 end
 
 function Enemy:update(dt, player)
-	-- d = delta, difference or distance
-	-- v = normalized vector
 	local dx = player.x + (player.size / 2) - self.x - (self.size / 2)
 	local dy = player.y + (player.size / 2) - self.y - (self.size / 2)
 
 	local distance = math.sqrt(dx * dx + dy * dy)
+
+	if self.take_damage_time > 0 then
+		self.take_damage_time = self.take_damage_time - dt
+	end
 
 	if distance > 0 then
 		local vx = dx / distance
@@ -33,10 +38,19 @@ end
 
 function Enemy:draw()
 	love.graphics.rectangle("fill", self.x, self.y, self.size, self.size)
+	love.graphics.printf(self.health, self.x, self.y - (self.size / 2) - 3, self.size, "center")
+
+	if self.take_damage_time > 0 then
+		love.graphics.push("all")
+		love.graphics.setColor(255, 0, 0, 0.6)
+		love.graphics.rectangle("fill", self.x, self.y, self.size, self.size)
+		love.graphics.pop()
+	end
 end
 
 function Enemy:takeDamage(damage)
 	self.health = self.health - damage
+	self.take_damage_time = self.take_damage_duration
 	if self.health < 0 then
 		self.health = 0
 	end
