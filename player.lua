@@ -14,6 +14,9 @@ function Player:new(x, y, size)
 	self.maxHealth = 100
 
 	self.bullets = {}
+	self.bullet_speed = 400
+	self.bullet_size = 10
+
 	self.bullet_time = 0
 	self.atack_speed = 0.5
 	self.atack_speed_base = 1
@@ -33,36 +36,24 @@ end
 function Player:update(dt)
 	self.size_effect:update(dt)
 	self:manage_timers(dt)
-
-	local dx, dy = KeyBoardEvents.get_movement_vector()
-	self.x = self.x + dx * self.speed * dt
-	self.y = self.y + dy * self.speed * dt
-
-	self.x, self.y = Collision.satayInBounds(self.x, self.y, self.size, self.size)
-
-	local bullet_x, bullet_y = KeyBoardEvents.get_direction_vector()
-	if bullet_x ~= 0 or bullet_y ~= 0 then
-		self:shoot()
-	end
-
-	for i = #self.bullets, 1, -1 do
-		local bullet = self.bullets[i]
-		bullet:update(dt)
-	end
+	self:update_movement(dt)
+	self:update_bullets(dt)
 end
 
 function Player:draw()
 	self.size_effect:preDraw()
 	ScreenShake.preDraw()
 
+	love.graphics.push("all")
 	love.graphics.rectangle("fill", self.x, self.y, self.size, self.size)
 	if self.taking_damage_time > 0 then
 		love.graphics.setColor(255, 0, 0, 0.6)
 		love.graphics.rectangle("fill", self.x, self.y, self.size, self.size)
 	end
+	love.graphics.pop()
 
-	self.size_effect:postDraw()
 	ScreenShake.postDraw()
+	self.size_effect:postDraw()
 
 	for i = #self.bullets, 1, -1 do
 		local bullet = self.bullets[i]
@@ -85,7 +76,7 @@ function Player:takeDamage(damage)
 	end
 end
 
-function Player:shoot()
+function Player:shoot(bullet_x, bullet_y)
 	if self.bullet_time > 0 then
 		return
 	end
@@ -96,6 +87,9 @@ function Player:shoot()
 	-- ATACK SPEED NORMAL E PORCENTAGEM A SER INCREMENTADO
 	local bullet_p_second = self.atack_speed_base * (self.atack_speed + 1)
 	self.bullet_time = 1 / bullet_p_second
+
+	local new_bullet = Bullet:new(self.x, self.y, bullet_x, bullet_y, self.bullet_speed, self.bullet_size)
+	table.insert(self.bullets, new_bullet)
 end
 
 function Player:manage_timers(dt)
@@ -109,6 +103,26 @@ function Player:manage_timers(dt)
 
 	if self.bullet_time > 0 then
 		self.bullet_time = self.bullet_time - dt
+	end
+end
+
+function Player:update_movement(dt)
+	local dx, dy = KeyBoardEvents.get_movement_vector()
+	self.x = self.x + dx * self.speed * dt
+	self.y = self.y + dy * self.speed * dt
+
+	self.x, self.y = Collision.satayInBounds(self.x, self.y, self.size, self.size)
+end
+
+function Player:update_bullets(dt)
+	local bullet_x, bullet_y = KeyBoardEvents.get_direction_vector()
+	if bullet_x ~= 0 or bullet_y ~= 0 then
+		self:shoot(bullet_x, bullet_y)
+	end
+
+	for i = #self.bullets, 1, -1 do
+		local bullet = self.bullets[i]
+		bullet:update(dt)
 	end
 end
 

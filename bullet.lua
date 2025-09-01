@@ -9,6 +9,8 @@ function Bullet:new(x, y, dirx, diry, speed, size)
 	self.diry = diry
 	self.speed = speed
 	self.size = size
+
+	return self
 end
 
 function Bullet:update(dt)
