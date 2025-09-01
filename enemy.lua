@@ -1,3 +1,5 @@
+local SizeEffect = require("effects.size_effect")
+
 local Enemy = {}
 Enemy.__index = Enemy
 
@@ -14,10 +16,13 @@ function Enemy:new(x, y, speed, size, damage)
 	self.take_damage_duration = 0.2
 	self.take_damage_time = 0
 
+	self.size_effect = SizeEffect:new(self)
 	return self
 end
 
 function Enemy:update(dt, player)
+	self.size_effect:update(dt)
+
 	local dx = player.x + (player.size / 2) - self.x - (self.size / 2)
 	local dy = player.y + (player.size / 2) - self.y - (self.size / 2)
 
@@ -37,6 +42,7 @@ function Enemy:update(dt, player)
 end
 
 function Enemy:draw()
+	self.size_effect:preDraw()
 	love.graphics.rectangle("fill", self.x, self.y, self.size, self.size)
 	love.graphics.printf(self.health, self.x, self.y - (self.size / 2) - 3, self.size, "center")
 
@@ -46,11 +52,13 @@ function Enemy:draw()
 		love.graphics.rectangle("fill", self.x, self.y, self.size, self.size)
 		love.graphics.pop()
 	end
+	self.size_effect:postDraw()
 end
 
 function Enemy:takeDamage(damage)
 	self.health = self.health - damage
 	self.take_damage_time = self.take_damage_duration
+	self.size_effect:trigger(self.take_damage_duration, 0.94)
 	if self.health < 0 then
 		self.health = 0
 	end
