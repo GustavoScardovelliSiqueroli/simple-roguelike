@@ -20,6 +20,7 @@ function Player:new(x, y, size)
 	self.bullet_time = 0
 	self.atack_speed = 0.5
 	self.atack_speed_base = 1
+	self.damage = 10
 
 	self.x = x
 	self.y = y
@@ -88,7 +89,7 @@ function Player:shoot(bullet_x, bullet_y)
 	local bullet_p_second = self.atack_speed_base * (self.atack_speed + 1)
 	self.bullet_time = 1 / bullet_p_second
 
-	local new_bullet = Bullet:new(self.x, self.y, bullet_x, bullet_y, self.bullet_speed, self.bullet_size)
+	local new_bullet = Bullet:new(self.x, self.y, bullet_x, bullet_y, self.bullet_speed, self.bullet_size, self.damage)
 	table.insert(self.bullets, new_bullet)
 end
 

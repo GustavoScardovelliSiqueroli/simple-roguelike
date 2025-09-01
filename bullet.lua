@@ -1,7 +1,7 @@
 local Bullet = {}
 Bullet.__index = Bullet
 
-function Bullet:new(x, y, dirx, diry, speed, size)
+function Bullet:new(x, y, dirx, diry, speed, size, damage)
 	self = setmetatable({}, Bullet)
 	self.x = x
 	self.y = y
@@ -9,6 +9,7 @@ function Bullet:new(x, y, dirx, diry, speed, size)
 	self.diry = diry
 	self.speed = speed
 	self.size = size
+	self.damage = damage
 
 	return self
 end
