@@ -18,8 +18,8 @@ function Player:new(x, y, size)
 	self.bullet_size = 10
 
 	self.bullet_time = 0
-	self.atack_speed = 0.5
-	self.atack_speed_base = 1
+	self.atack_speed = 0.25
+	self.atack_speed_base = 0.5
 	self.damage = 10
 
 	self.x = x
@@ -45,13 +45,13 @@ function Player:draw()
 	self.size_effect:preDraw()
 	ScreenShake.preDraw()
 
-	love.graphics.push("all")
 	love.graphics.rectangle("fill", self.x, self.y, self.size, self.size)
 	if self.taking_damage_time > 0 then
+		love.graphics.push("all")
 		love.graphics.setColor(255, 0, 0, 0.6)
 		love.graphics.rectangle("fill", self.x, self.y, self.size, self.size)
+		love.graphics.pop()
 	end
-	love.graphics.pop()
 
 	ScreenShake.postDraw()
 	self.size_effect:postDraw()
@@ -62,7 +62,7 @@ function Player:draw()
 	end
 end
 
-function Player:takeDamage(damage)
+function Player:take_damage(damage)
 	if self.ivulnerable_time > 0 then
 		return
 	end

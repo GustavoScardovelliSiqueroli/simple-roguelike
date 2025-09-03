@@ -3,7 +3,7 @@ local SizeEffect = require("effects.size_effect")
 local Enemy = {}
 Enemy.__index = Enemy
 
-function Enemy:new(x, y, speed, size, damage)
+function Enemy:new(x, y, speed, size, damage, health)
 	self = setmetatable({}, Enemy)
 
 	self.x = x
@@ -11,7 +11,7 @@ function Enemy:new(x, y, speed, size, damage)
 	self.size = size
 	self.speed = speed
 	self.damage = damage
-	self.health = 50
+	self.health = health
 
 	self.take_damage_duration = 0.2
 	self.take_damage_time = 0
@@ -55,7 +55,7 @@ function Enemy:draw()
 	self.size_effect:postDraw()
 end
 
-function Enemy:takeDamage(damage)
+function Enemy:take_damage(damage)
 	self.health = self.health - damage
 	self.take_damage_time = self.take_damage_duration
 	self.size_effect:trigger(self.take_damage_duration, 0.94)

@@ -1,6 +1,7 @@
 local Player = require("player")
 local ScreenShake = require("effects.screen_shake")
-local Enemy = require("enemy")
+local Enemy = require("enemies.melee_enemy")
+local RangedEnemy = require("enemies.ranged_enemy")
 local Collision = require("collision")
 
 local enemies = {}
@@ -15,8 +16,10 @@ function love.load()
 	emoji_font = love.graphics.newFont("statics/fonts/NotoEmoji-VariableFont_wght.ttf", 20)
 	text_font = love.graphics.newFont("statics/fonts/PublicPixel-rv0pA.ttf", 12)
 
-	local enemy = Enemy:new(100, 100, 100, 50, 10)
+	local enemy = Enemy:new(100, 100, 100, 50, 10, 50)
+	local ranged_enemy = RangedEnemy:new(400, 400, 100, 30, 20, 5, 0.5, 200)
 	table.insert(enemies, enemy)
+	table.insert(enemies, ranged_enemy)
 
 	player = Player:new((w_width - player_size) / 2, (w_height - player_size) / 2, player_size)
 end
@@ -39,7 +42,7 @@ function love.update(dt)
 				enemy.size
 			)
 		then
-			player:takeDamage(enemy.damage)
+			player:take_damage(enemy.damage)
 		end
 	end
 
@@ -60,7 +63,7 @@ function love.update(dt)
 				)
 			then
 				table.remove(player.bullets, bi)
-				enemy:takeDamage(bullet.damage)
+				enemy:take_damage(bullet.damage)
 				if enemy.health == 0 then
 					table.remove(enemies, ei)
 				end
