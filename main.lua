@@ -72,6 +72,31 @@ function love.update(dt)
 		end
 	end
 
+	for ei = #enemies, 1, -1 do
+		local enemy = enemies[ei]
+		if enemy.bullets then
+			for ebi = #enemy.bullets, 1, -1 do
+				local bullet = enemy.bullets[ebi]
+				if
+					Collision.checkCollision(
+						bullet.x,
+						bullet.y,
+						bullet.size,
+						bullet.size,
+						player.x,
+						player.y,
+						player.size,
+						player.size
+					)
+				then
+					table.remove(enemy.bullets, ebi)
+					player:take_damage(bullet.damage)
+					break
+				end
+			end
+		end
+	end
+
 	health_text = string.format("%03d/%03d", player.health, player.maxHealth)
 	ScreenShake.update(dt)
 end

@@ -42,24 +42,27 @@ function Player:update(dt)
 end
 
 function Player:draw()
+	for i = #self.bullets, 1, -1 do
+		local bullet = self.bullets[i]
+		bullet:draw()
+	end
+
 	self.size_effect:preDraw()
 	ScreenShake.preDraw()
 
+	love.graphics.push("all")
+	love.graphics.setColor(0, 0.4, 1, 1)
 	love.graphics.rectangle("fill", self.x, self.y, self.size, self.size)
+	love.graphics.pop()
 	if self.taking_damage_time > 0 then
 		love.graphics.push("all")
-		love.graphics.setColor(255, 0, 0, 0.6)
+		love.graphics.setColor(1, 0, 0, 0.6)
 		love.graphics.rectangle("fill", self.x, self.y, self.size, self.size)
 		love.graphics.pop()
 	end
 
 	ScreenShake.postDraw()
 	self.size_effect:postDraw()
-
-	for i = #self.bullets, 1, -1 do
-		local bullet = self.bullets[i]
-		bullet:draw()
-	end
 end
 
 function Player:take_damage(damage)
