@@ -48,6 +48,10 @@ function love.update(dt)
 		local vy = dy / distance
 
 		enemy:update(dt, distance, vx, vy)
+		if player.health <= 0 then
+			lose = true
+		end
+
 		if enemy.shoot then
 			if distance <= enemy.range and distance > 0 then
 				local bullet = enemy:shoot(vx, vy)
@@ -123,9 +127,6 @@ function love.update(dt)
 		then
 			table.remove(enemies_bullets, ebi)
 			player:take_damage(bullet.damage)
-			if player.health <= 0 then
-				lose = true
-			end
 			break
 		end
 	end
