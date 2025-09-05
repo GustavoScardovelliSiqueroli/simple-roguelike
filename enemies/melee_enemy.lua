@@ -35,7 +35,7 @@ end
 
 function Enemy:draw()
 	self.size_effect:preDraw()
-	love.graphics.rectangle("fill", self.x, self.y, self.size, self.size)
+	love.graphics.rectangle("line", self.x, self.y, self.size, self.size)
 	love.graphics.printf(self.health, self.x, self.y - (self.size / 2) - 3, self.size, "center")
 
 	if self.take_damage_time > 0 then

@@ -24,6 +24,8 @@ function RangedEnemy:new(x, y, speed, size, health, damage, atack_speed, range)
 	self.take_damage_duration = 0.2
 	self.take_damage_time = 0
 
+	self.offset_angle = math.random() * math.pi * 2
+
 	self.size_effect = SizeEffect:new(self)
 	return self
 end
@@ -42,7 +44,7 @@ end
 
 function RangedEnemy:draw()
 	self.size_effect:preDraw()
-	love.graphics.rectangle("fill", self.x, self.y, self.size, self.size)
+	love.graphics.rectangle("line", self.x, self.y, self.size, self.size)
 	love.graphics.printf(self.health, self.x, self.y - (self.size / 2) - 3, self.size, "center")
 
 	if self.take_damage_time > 0 then
@@ -65,6 +67,11 @@ end
 
 function RangedEnemy:update_movement(dt, distance, vx, vy)
 	if distance <= self.range then
+		local perp_x = -vy
+		local perp_y = vx
+		local angle = self.offset_angle
+		self.x = self.x + (perp_x * math.cos(angle) - perp_y * math.sin(angle)) * (self.speed * 0.3) * dt
+		self.y = self.y + (perp_x * math.sin(angle) + perp_y * math.cos(angle)) * (self.speed * 0.3) * dt
 		return
 	end
 	if distance > 0 then

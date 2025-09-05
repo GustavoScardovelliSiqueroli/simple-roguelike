@@ -12,6 +12,7 @@ local emoji_font
 local text_font
 local health_text
 local player_size = 20
+local paused = false
 
 function love.load()
 	emoji_font = love.graphics.newFont("statics/fonts/NotoEmoji-VariableFont_wght.ttf", 20)
@@ -30,6 +31,9 @@ function love.load()
 end
 
 function love.update(dt)
+	if paused then
+		return
+	end
 	player:update(dt)
 
 	for ei = #enemies, 1, -1 do
@@ -154,7 +158,7 @@ function love.keypressed(key)
 	if key == "q" then
 		love.event.quit()
 	end
-	-- if key == "e" then
-	-- 	player:takeDamage(10)
-	-- end
+	if key == "e" then
+		paused = not paused
+	end
 end
