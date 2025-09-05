@@ -19,8 +19,12 @@ function love.load()
 
 	local enemy = Enemy:new(100, 100, 100, 50, 10, 50)
 	local ranged_enemy = RangedEnemy:new(400, 400, 100, 30, 20, 5, 0.5, 200)
+	local ranged_enemy_2 = RangedEnemy:new(20, 600, 100, 30, 20, 5, 0.5, 200)
+	local ranged_enemy_3 = RangedEnemy:new(200, -50, 100, 30, 20, 5, 0.5, 200)
 	table.insert(enemies, enemy)
 	table.insert(enemies, ranged_enemy)
+	table.insert(enemies, ranged_enemy_2)
+	table.insert(enemies, ranged_enemy_3)
 
 	player = Player:new((w_width - player_size) / 2, (w_height - player_size) / 2, player_size)
 end
@@ -88,6 +92,15 @@ function love.update(dt)
 
 	for ebi = #enemies_bullets, 1, -1 do
 		local bullet = enemies_bullets[ebi]
+		if
+			bullet.x > w_width + bullet.size
+			or bullet.x < 0 - bullet.size
+			or bullet.y < 0 - bullet.size
+			or bullet.y > w_height + bullet.size
+		then
+			table.remove(enemies_bullets, ebi)
+			break
+		end
 		bullet:update(dt)
 		if
 			Collision.checkCollision(
