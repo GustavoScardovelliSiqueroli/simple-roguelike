@@ -18,9 +18,9 @@ function Player:new(x, y, size)
 	self.bullet_size = 10
 
 	self.bullet_time = 0
-	self.atack_speed = 0.25
+	self.atack_speed = 3
 	self.atack_speed_base = 0.5
-	self.damage = 10
+	self.damage = 2
 
 	self.x = x
 	self.y = y

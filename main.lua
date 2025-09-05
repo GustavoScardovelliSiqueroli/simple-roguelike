@@ -13,16 +13,19 @@ local text_font
 local health_text
 local player_size = 20
 local paused = false
+local lose = false
 
 function love.load()
 	emoji_font = love.graphics.newFont("statics/fonts/NotoEmoji-VariableFont_wght.ttf", 20)
 	text_font = love.graphics.newFont("statics/fonts/PublicPixel-rv0pA.ttf", 12)
 
-	local enemy = Enemy:new(100, 100, 100, 50, 10, 50)
-	local ranged_enemy = RangedEnemy:new(400, 400, 100, 30, 20, 5, 0.5, 200)
-	local ranged_enemy_2 = RangedEnemy:new(20, 600, 100, 30, 20, 5, 0.5, 200)
-	local ranged_enemy_3 = RangedEnemy:new(200, -50, 100, 30, 20, 5, 0.5, 200)
+	local enemy = Enemy:new(100, 100, 100, 50, 40, 50)
+	local enemy_2 = Enemy:new(800, 600, 100, 50, 40, 50)
+	local ranged_enemy = RangedEnemy:new(400, 400, 100, 30, 20, 20, 0.5, 350)
+	local ranged_enemy_2 = RangedEnemy:new(20, 600, 100, 30, 20, 20, 0.5, 350)
+	local ranged_enemy_3 = RangedEnemy:new(200, -50, 100, 30, 20, 20, 0.5, 350)
 	table.insert(enemies, enemy)
+	table.insert(enemies, enemy_2)
 	table.insert(enemies, ranged_enemy)
 	table.insert(enemies, ranged_enemy_2)
 	table.insert(enemies, ranged_enemy_3)
@@ -120,6 +123,9 @@ function love.update(dt)
 		then
 			table.remove(enemies_bullets, ebi)
 			player:take_damage(bullet.damage)
+			if player.health <= 0 then
+				lose = true
+			end
 			break
 		end
 	end
@@ -129,6 +135,13 @@ function love.update(dt)
 end
 
 function love.draw()
+	if lose then
+		local text_font_big = love.graphics.newFont("statics/fonts/PublicPixel-rv0pA.ttf", 40)
+		love.graphics.setFont(text_font_big)
+		love.graphics.printf("PERDEU PLAYBOY", (w_width / 2) - 146.7, (w_height / 2) - 40, 293.4, "center")
+		return
+	end
+
 	for ei = #enemies, 1, -1 do
 		local enemy = enemies[ei]
 		enemy:draw()
@@ -159,6 +172,7 @@ function love.keypressed(key)
 		love.event.quit()
 	end
 	if key == "e" then
+		lose = true
 		paused = not paused
 	end
 end
