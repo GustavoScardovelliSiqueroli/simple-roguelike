@@ -20,22 +20,14 @@ function Enemy:new(x, y, speed, size, damage, health)
 	return self
 end
 
-function Enemy:update(dt, player)
+function Enemy:update(dt, distance, vx, vy)
 	self.size_effect:update(dt)
-
-	local dx = player.x + (player.size / 2) - self.x - (self.size / 2)
-	local dy = player.y + (player.size / 2) - self.y - (self.size / 2)
-
-	local distance = math.sqrt(dx * dx + dy * dy)
 
 	if self.take_damage_time > 0 then
 		self.take_damage_time = self.take_damage_time - dt
 	end
 
 	if distance > 0 then
-		local vx = dx / distance
-		local vy = dy / distance
-
 		self.x = self.x + vx * self.speed * dt
 		self.y = self.y + vy * self.speed * dt
 	end

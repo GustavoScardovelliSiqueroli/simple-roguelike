@@ -4,6 +4,7 @@ local Enemy = require("enemies.melee_enemy")
 local RangedEnemy = require("enemies.ranged_enemy")
 local Collision = require("collision")
 
+local enemies_bullets = {}
 local enemies = {}
 local player
 local w_width, w_height = love.graphics.getDimensions()
@@ -29,7 +30,20 @@ function love.update(dt)
 
 	for ei = #enemies, 1, -1 do
 		local enemy = enemies[ei]
-		enemy:update(dt, player)
+		local dx = player.x + (player.size / 2) - enemy.x - (enemy.size / 2)
+		local dy = player.y + (player.size / 2) - enemy.y - (enemy.size / 2)
+		local distance = math.sqrt(dx * dx + dy * dy)
+		local vx = dx / distance
+		local vy = dy / distance
+
+		enemy:update(dt, distance, vx, vy)
+		if enemy.shoot then
+			if distance <= enemy.range and distance > 0 then
+				local bullet = enemy:shoot(vx, vy)
+				table.insert(enemies_bullets, bullet)
+			end
+		end
+
 		if
 			Collision.checkCollision(
 				player.x,
@@ -72,28 +86,24 @@ function love.update(dt)
 		end
 	end
 
-	for ei = #enemies, 1, -1 do
-		local enemy = enemies[ei]
-		if enemy.bullets then
-			for ebi = #enemy.bullets, 1, -1 do
-				local bullet = enemy.bullets[ebi]
-				if
-					Collision.checkCollision(
-						bullet.x,
-						bullet.y,
-						bullet.size,
-						bullet.size,
-						player.x,
-						player.y,
-						player.size,
-						player.size
-					)
-				then
-					table.remove(enemy.bullets, ebi)
-					player:take_damage(bullet.damage)
-					break
-				end
-			end
+	for ebi = #enemies_bullets, 1, -1 do
+		local bullet = enemies_bullets[ebi]
+		bullet:update(dt)
+		if
+			Collision.checkCollision(
+				bullet.x,
+				bullet.y,
+				bullet.size,
+				bullet.size,
+				player.x,
+				player.y,
+				player.size,
+				player.size
+			)
+		then
+			table.remove(enemies_bullets, ebi)
+			player:take_damage(bullet.damage)
+			break
 		end
 	end
 
@@ -105,6 +115,10 @@ function love.draw()
 	for ei = #enemies, 1, -1 do
 		local enemy = enemies[ei]
 		enemy:draw()
+	end
+	for i = #enemies_bullets, 1, -1 do
+		local bullet = enemies_bullets[i]
+		bullet:draw()
 	end
 
 	player:draw()
