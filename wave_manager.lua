@@ -103,9 +103,10 @@ function WaveManager:create_enemy(enemy_type, x, y)
 		local size = 45
 		return Enemy:new(x, y, speed, size, damage, health)
 	elseif enemy_type == "ranged" then
+		health = math.floor(health * 0.7)
 		local size = 35
 		local fire_rate = math.max(0.3, 0.5 - (self.current_wave - 1) * 0.02) -- ?
-		local range = math.min(500, 350 + (self.current_wave - 1) * 10) -- ?
+		local range = math.min(350, 200 + (self.current_wave - 1) * 10) -- ?
 		return RangedEnemy:new(x, y, speed, size, health, damage, fire_rate, range)
 	end
 end

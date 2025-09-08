@@ -1,14 +1,12 @@
 local Player = require("player")
 local ScreenShake = require("effects.screen_shake")
-local Enemy = require("enemies.melee_enemy")
-local RangedEnemy = require("enemies.ranged_enemy")
 local Collision = require("collision")
 local WaveManager = require("wave_manager")
 
 local enemies_bullets = {}
 local enemies = {}
 local player
-local w_width, w_height = love.graphics.getDimensions()
+local w_width, w_height = 1280, 720
 local emoji_font
 local text_font
 local health_text
@@ -18,6 +16,12 @@ local lose = false
 local wave_manager
 
 function love.load()
+	love.window.setMode(w_width, w_height, {
+		resizable = false,
+		fullscreen = false,
+		vsync = false,
+	})
+
 	emoji_font = love.graphics.newFont("statics/fonts/NotoEmoji-VariableFont_wght.ttf", 20)
 	text_font = love.graphics.newFont("statics/fonts/PublicPixel-rv0pA.ttf", 12)
 
