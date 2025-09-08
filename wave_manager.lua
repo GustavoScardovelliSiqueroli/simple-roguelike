@@ -95,18 +95,18 @@ function WaveManager:create_enemy(enemy_type, x, y)
 	local Enemy = require("enemies.melee_enemy")
 	local RangedEnemy = require("enemies.ranged_enemy")
 
-	local health = math.floor(100 * self.difficulty_multiplier)
+	local health = math.floor(50 * self.difficulty_multiplier)
 	local speed = math.min(100, 50 * (1 + (self.difficulty_multiplier - 1) * 0.5))
-	local damage = math.floor(30 * self.difficulty_multiplier)
+	local damage = math.floor(15 * self.difficulty_multiplier)
 
 	if enemy_type == "melee" then
-		local size = math.floor(40 * (1 + (self.difficulty_multiplier - 1) * 0.2)) -- ?
-		return Enemy:new(x, y, speed, health, size, damage)
+		local size = 45
+		return Enemy:new(x, y, speed, size, damage, health)
 	elseif enemy_type == "ranged" then
-		local size = math.floor(20 * (1 + (self.difficulty_multiplier - 1) * 0.2))
+		local size = 35
 		local fire_rate = math.max(0.3, 0.5 - (self.current_wave - 1) * 0.02) -- ?
-		local range = math.min(350, 105 + (self.current_wave - 1) * 10) -- ?
-		return RangedEnemy:new(x, y, speed, health, size, damage, fire_rate, range)
+		local range = math.min(500, 350 + (self.current_wave - 1) * 10) -- ?
+		return RangedEnemy:new(x, y, speed, size, health, damage, fire_rate, range)
 	end
 end
 
