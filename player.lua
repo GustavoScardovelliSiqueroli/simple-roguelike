@@ -20,7 +20,7 @@ function Player:new(x, y, size)
 	self.bullet_time = 0
 	self.atack_speed = 3
 	self.atack_speed_base = 0.5
-	self.damage = 2
+	self.damage = 5
 
 	self.x = x
 	self.y = y

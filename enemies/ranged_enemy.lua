@@ -16,7 +16,7 @@ function RangedEnemy:new(x, y, speed, size, health, damage, atack_speed, range)
 	self.atack_speed = atack_speed
 	self.range = range
 
-	self.atack_speed_base = 0.8
+	self.atack_speed_base = 0.5
 	self.bullet_speed = 300
 	self.bullet_size = 10
 	self.bullet_time = 0
