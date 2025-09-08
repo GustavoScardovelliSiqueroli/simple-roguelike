@@ -24,7 +24,7 @@ function RangedEnemy:new(x, y, speed, size, health, damage, atack_speed, range)
 	self.take_damage_duration = 0.2
 	self.take_damage_time = 0
 
-	self.offset_angle = math.random() * math.pi * 2
+	self.offset_angle = (math.random() - 0.5) * math.rad(30) -- até 30° para cada lado
 
 	self.size_effect = SizeEffect:new(self)
 	return self
@@ -67,11 +67,12 @@ end
 
 function RangedEnemy:update_movement(dt, distance, vx, vy)
 	if distance <= self.range then
-		local perp_x = -vy
-		local perp_y = vx
-		local angle = self.offset_angle
-		self.x = self.x + (perp_x * math.cos(angle) - perp_y * math.sin(angle)) * (self.speed * 0.3) * dt
-		self.y = self.y + (perp_x * math.sin(angle) + perp_y * math.cos(angle)) * (self.speed * 0.3) * dt
+		local cosA = math.cos(self.offset_angle)
+		local sinA = math.sin(self.offset_angle)
+		local angled_vx = vx * cosA - vy * sinA
+		local angled_vy = vx * sinA + vy * cosA
+		self.x = self.x + angled_vx * self.speed * 0.3 * dt
+		self.y = self.y + angled_vy * self.speed * 0.3 * dt
 		return
 	end
 	if distance > 0 then

@@ -19,7 +19,7 @@ function love.load()
 	love.window.setMode(w_width, w_height, {
 		resizable = false,
 		fullscreen = false,
-		vsync = false,
+		vsync = true,
 	})
 
 	emoji_font = love.graphics.newFont("statics/fonts/NotoEmoji-VariableFont_wght.ttf", 20)
@@ -34,6 +34,7 @@ function love.update(dt)
 	if paused then
 		return
 	end
+	print(enemies)
 	if player.health <= 0 then
 		lose = true
 	end
@@ -42,6 +43,7 @@ function love.update(dt)
 
 	local wave_result, new_enemy = wave_manager:update(dt, enemies)
 	if wave_result == "spawn_enemy" and new_enemy then
+		print(new_enemy)
 		table.insert(enemies, new_enemy)
 	elseif wave_result == "wave_complete" then
 		wave_manager:start_next_wave()
@@ -182,7 +184,18 @@ function love.keypressed(key)
 		love.event.quit()
 	end
 	if key == "e" then
-		lose = true
+		print("paused")
+		local wave_info = wave_manager:get_wave_info()
+		print(wave_info)
+		for ky, value in pairs(wave_info) do
+			print(ky, value)
+		end
+		print("......................................................")
+		for k, v in pairs(enemies) do
+			for ke, ve in pairs(v) do
+				print(k, ke, ve)
+			end
+		end
 		paused = not paused
 	end
 end
