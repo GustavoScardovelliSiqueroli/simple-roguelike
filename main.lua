@@ -3,6 +3,7 @@ local ScreenShake = require("effects.screen_shake")
 local Enemy = require("enemies.melee_enemy")
 local RangedEnemy = require("enemies.ranged_enemy")
 local Collision = require("collision")
+local WaveManager = require("wave_manager")
 
 local enemies_bullets = {}
 local enemies = {}
@@ -14,30 +15,33 @@ local health_text
 local player_size = 20
 local paused = false
 local lose = false
+local wave_manager
 
 function love.load()
 	emoji_font = love.graphics.newFont("statics/fonts/NotoEmoji-VariableFont_wght.ttf", 20)
 	text_font = love.graphics.newFont("statics/fonts/PublicPixel-rv0pA.ttf", 12)
 
-	local enemy = Enemy:new(100, 100, 100, 50, 40, 50)
-	local enemy_2 = Enemy:new(800, 600, 100, 50, 40, 50)
-	local ranged_enemy = RangedEnemy:new(400, 400, 100, 30, 20, 20, 0.5, 350)
-	local ranged_enemy_2 = RangedEnemy:new(20, 600, 100, 30, 20, 20, 0.5, 350)
-	local ranged_enemy_3 = RangedEnemy:new(200, -50, 100, 30, 20, 20, 0.5, 350)
-	table.insert(enemies, enemy)
-	table.insert(enemies, enemy_2)
-	table.insert(enemies, ranged_enemy)
-	table.insert(enemies, ranged_enemy_2)
-	table.insert(enemies, ranged_enemy_3)
-
 	player = Player:new((w_width - player_size) / 2, (w_height - player_size) / 2, player_size)
+	wave_manager = WaveManager:new()
+	wave_manager:start_next_wave()
 end
 
 function love.update(dt)
 	if paused then
 		return
 	end
+	if player.health <= 0 then
+		lose = true
+	end
+
 	player:update(dt)
+
+	local wave_result, new_enemy = wave_manager:update(dt, enemies)
+	if wave_result == "spawn_enemy" and new_enemy then
+		table.insert(enemies, new_enemy)
+	elseif wave_result == "wave_complete" then
+		wave_manager:start_next_wave()
+	end
 
 	for ei = #enemies, 1, -1 do
 		local enemy = enemies[ei]
@@ -48,9 +52,6 @@ function love.update(dt)
 		local vy = dy / distance
 
 		enemy:update(dt, distance, vx, vy)
-		if player.health <= 0 then
-			lose = true
-		end
 
 		if enemy.shoot then
 			if distance <= enemy.range and distance > 0 then
@@ -95,6 +96,7 @@ function love.update(dt)
 				enemy:take_damage(bullet.damage)
 				if enemy.health == 0 then
 					table.remove(enemies, ei)
+					wave_manager:enemy_killed()
 				end
 				break
 			end
@@ -156,12 +158,15 @@ function love.draw()
 
 	love.graphics.push()
 	ScreenShake.preDraw()
+
 	love.graphics.setFont(text_font)
 	love.graphics.setColor(1, 1, 1)
 	love.graphics.printf(health_text, 40, 5, 90, "right")
 	love.graphics.setFont(emoji_font)
 	love.graphics.print("❤", 10, 2)
 	love.graphics.setFont(text_font)
+	wave_manager:draw_ui(text_font, w_width)
+
 	ScreenShake.postDraw()
 	love.graphics.pop()
 
