@@ -15,7 +15,7 @@ function WaveManager:new()
 	self.spawn_timer = 0
 	self.spawn_delay = 1.5
 	self.wave_start_timer = 0
-	self.wave_start_delay = 3
+	self.wave_start_delay = 1
 
 	self.base_enemies = 3
 	self.enemies_per_wave = 2
@@ -106,7 +106,7 @@ function WaveManager:create_enemy(enemy_type, x, y)
 		health = math.floor(health * 0.7)
 		local size = 35
 		local fire_rate = math.max(0.3, 0.5 - (self.current_wave - 1) * 0.02) -- ?
-		local range = math.min(350, 200 + (self.current_wave - 1) * 10) -- ?
+		local range = math.min(350, 350 + (self.current_wave - 1) * 10) -- ?
 		return RangedEnemy:new(x, y, speed, size, health, damage, fire_rate, range)
 	end
 end
